@@ -40,7 +40,7 @@ Start the training process, here we use huggingface transformers
 as an example to hold a model on GPU 0.
 """
 
-train_model = AutoModelForCausalLM.from_pretrained("/data1/temp/modelscope/models/LLM-Research/Meta-Llama-3___1-8B-Instruct")
+train_model = AutoModelForCausalLM.from_pretrained("/data1/temp/huggingface/Mistral-7B-Instruct-v0.2/")
 train_model.to("cuda:0")
 """
 Start the inference process, here we use vLLM to hold a model on GPU 1 and 
@@ -108,7 +108,7 @@ ray.get(handle)
 
 # simulate training, modify the weights of the model.
 for name, p in train_model.named_parameters():
-    p.data.zero_()
+    p.data.zero_() 
 
 # sync weight from the training process to the inference engine.
 for name, p in train_model.named_parameters():
