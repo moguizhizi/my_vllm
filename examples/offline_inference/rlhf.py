@@ -81,6 +81,7 @@ prompts = [
     "The future of AI is",
 ]
 
+
 sampling_params = SamplingParams(temperature=0)
 
 outputs = ray.get(llm.generate.remote(prompts, sampling_params))
