@@ -40,7 +40,7 @@ Start the training process, here we use huggingface transformers
 as an example to hold a model on GPU 0.
 """
 
-train_model = AutoModelForCausalLM.from_pretrained("/data1/temp/modelscope/models/LLM-Research/Meta-Llama-3___1-8B-Instruct")
+train_model = AutoModelForCausalLM.from_pretrained("facebook/opt-125m")
 train_model.to("cuda:0")
 """
 Start the inference process, here we use vLLM to hold a model on GPU 1 and 
@@ -50,7 +50,7 @@ documentation https://docs.ray.io/en/latest/ .
 os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3,4"
 ray.init()
 
-pg_inference = placement_group([{"GPU": 2, "CPU": 0}] * 2)
+pg_inference = placement_group([{"GPU": 1, "CPU": 0}] * 2)
 ray.get(pg_inference.ready())
 scheduling_inference = PlacementGroupSchedulingStrategy(
     placement_group=pg_inference,
@@ -66,7 +66,7 @@ llm = ray.remote(
     num_gpus=0,
     scheduling_strategy=scheduling_inference,
 )(MyLLM).remote(
-    model="/data1/temp/huggingface/Mistral-7B-Instruct-v0.2/",
+    model="facebook/opt-125m",
     enforce_eager=True,
     worker_extension_cls="rlhf_utils.WorkerExtension",
     tensor_parallel_size=2,
@@ -108,7 +108,7 @@ ray.get(handle)
 
 # simulate training, modify the weights of the model.
 for name, p in train_model.named_parameters():
-    p.data.zero_()
+    p.data.zero_() 
 
 # sync weight from the training process to the inference engine.
 for name, p in train_model.named_parameters():
