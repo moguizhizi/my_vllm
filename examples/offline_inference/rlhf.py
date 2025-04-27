@@ -47,7 +47,7 @@ Start the inference process, here we use vLLM to hold a model on GPU 1 and
 GPU 2. For the details on how to use ray, please refer to the ray 
 documentation https://docs.ray.io/en/latest/ .
 """
-os.environ["CUDA_VISIBLE_DEVICES"] = "1,2,3,4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4,5"
 ray.init()
 
 pg_inference = placement_group([{"GPU": 1, "CPU": 0}] * 2)
